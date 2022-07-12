@@ -1,4 +1,4 @@
-﻿using OpenQA.Selenium;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.Diagnostics;
 
@@ -25,17 +25,28 @@ internal class WSconsoleAPPHippo
                 sr.Close();
             }
 
-            IWebDriver driver = new ChromeDriver();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+
+            IWebDriver driver = new ChromeDriver(chromeOptions);
 
             foreach (var product in listaLinks)
             {
-                Thread.Sleep(1000);
+                //Thread.Sleep(500);
                 driver.Navigate().GoToUrl(product);
 
-                Thread.Sleep(6000);
+                Thread.Sleep(2000);
                 var productOn = driver.FindElements(By.XPath("/html/body/app-root/app-produto-detalhe/div/div/div[1]/div/div/app-tag-preco/div/div[2]"));
-
-                if (productOn.Count > 0)
+                var productPromo2 = driver.FindElements(By.XPath("/html/body/app-root/app-produto-detalhe/div/div/div[1]/div/div/app-tag-preco/div[2]/div[2]"));
+                if(productPromo2.Count > 0)
+                {
+                    var pricePromo2 = driver.FindElement(By.XPath("/html/body/app-root/app-produto-detalhe/div/div/div[1]/div/div/app-tag-preco/div[2]/div[2]"));
+                    //var i = pricePromo.Count;
+                    listaPrices.Add(pricePromo2.Text);
+                    Console.WriteLine(pricePromo2.Text);
+                    Debug.Print(pricePromo2.Text);
+                }
+                else if (productOn.Count > 0)
                 {
                     // var pricePromo = driver.FindElement(By.XPath("/html/head/meta[13]"));
                     var pricePromo = driver.FindElement(By.XPath("/html/body/app-root/app-produto-detalhe/div/div/div[1]/div/div/app-tag-preco/div/div[2]"));
